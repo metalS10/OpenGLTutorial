@@ -22,7 +22,7 @@ enum EntityGroupId
 //衝突形状リスト
 static const Entity::CollisionData collsionDataList[] =
 {
-	{ glm::vec3(-1.0f,-1.0f,-1.0f),glm::vec3(1.0f,1.0f,1.0f)},
+	{ glm::vec3(-1.0f,-1.0f,-1.0f),glm::vec3(1.0f,1.0f,1.0f) },
 	{ glm::vec3(-0.5f,-0.5f,-1.0f),glm::vec3(0.5f,0.5f,1.0f) },
 	{ glm::vec3(-1.0f,-1.0f,-1.0f),glm::vec3(1.0f,1.0f,1.0f) },
 	{ glm::vec3(-0.25f,-0.25f,-1.0f),glm::vec3(0.25f,0.25f,0.25f) },
@@ -88,7 +88,7 @@ struct UpdateToroid
 {
 	//Delete
 	//explicit UpdateToroid(Entity::BufferPtr buffer) : entityBuffer(buffer){}
-	void operator() (Entity::Entity& entity,double delta)
+	void operator() (Entity::Entity& entity, double delta)
 	{
 		//範囲外に出たら削除する
 		const glm::vec3 pos = entity.Position();
@@ -156,9 +156,9 @@ struct UpdateBlast
 
 		const glm::vec4 col0 = color[static_cast<int>(variation)];
 		const glm::vec4 col1 = color[static_cast<int>(variation) + 1];
-		const glm::vec4 newColor = glm::mix(col0,col1,std::fmod(variation,1));
+		const glm::vec4 newColor = glm::mix(col0, col1, std::fmod(variation, 1));
 		entity.Color(newColor);
-		
+
 		//Y軸回転させる
 		glm::vec3 euler = glm::eulerAngles(entity.Rotation());
 		euler.y += glm::radians(60.0f) * static_cast<float>(delta);
@@ -174,7 +174,7 @@ struct UpdateBlast
 */
 struct UpdatePlayer
 {
-	void operator() (Entity::Entity& entity,double delta)
+	void operator() (Entity::Entity& entity, double delta)
 	{
 		GameEngine& game = GameEngine::Instance();
 		const GamePad gamepad = game.GetGamePad();
@@ -239,7 +239,7 @@ struct UpdatePlayer
 
 
 	}
-private :
+private:
 	double shotInterval = 0;
 };
 
@@ -273,7 +273,7 @@ struct Update
 		interval -= delta;
 		if (interval <= 0)
 		{
-			const std::uniform_real_distribution<> rndInterval(1,1);
+			const std::uniform_real_distribution<> rndInterval(1, 1);
 			const std::uniform_int_distribution<> rndAddingCount(1, 5);
 			for (int i = rndAddingCount(game.Rand());i > 0; --i)
 			{
@@ -349,7 +349,7 @@ int main()
 	{
 		return 1;
 	}
-	
+
 	//TexturePtr tex = Texture::LoadFromFile("Res/Sparrow.bmp");
 	game.LoadTextureFromFile("Res/Toroid.bmp");
 	game.LoadTextureFromFile("Res/Player.bmp");
@@ -366,6 +366,6 @@ int main()
 
 	game.UpdateFunc(Update());
 	game.Run();
-	
+
 	return 0;
 }
