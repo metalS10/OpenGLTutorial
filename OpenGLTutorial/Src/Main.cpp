@@ -9,7 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-//ƒGƒ“ƒeƒBƒeƒB‚ÌÕ“ËƒOƒ‹[ƒvID
+//ã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£ã®è¡çªã‚°ãƒ«ãƒ¼ãƒ—ID
 enum EntityGroupId
 {
 	EntityGroupId_Player,
@@ -19,7 +19,7 @@ enum EntityGroupId
 	EntityGroupId_Others,
 };
 
-//Õ“ËŒ`óƒŠƒXƒg
+//è¡çªå½¢çŠ¶ãƒªã‚¹ãƒˆ
 static const Entity::CollisionData collsionDataList[] =
 {
 	{ glm::vec3(-1.0f,-1.0f,-1.0f),glm::vec3(1.0f,1.0f,1.0f)},
@@ -28,21 +28,21 @@ static const Entity::CollisionData collsionDataList[] =
 	{ glm::vec3(-0.25f,-0.25f,-1.0f),glm::vec3(0.25f,0.25f,0.25f) },
 };
 
-///3DƒxƒNƒ^[Œ^
+///3Dãƒ™ã‚¯ã‚¿ãƒ¼å‹
 struct Vector3
 {
 	float x, y, z;
 };
 
-///RGBAƒJƒ‰[Œ^
+///RGBAã‚«ãƒ©ãƒ¼å‹
 struct Color
 {
 	float r, g, b, a;
 };
 
+//ã‚³ãƒ¡ãƒ³ãƒˆ
 
-
-///’¸“_ƒVƒF[ƒ_
+///é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€
 static const char* vsCode =
 "#version 410\n"
 "layout(location = 0) in vec3 vPosition;"
@@ -58,7 +58,7 @@ static const char* vsCode =
 " gl_Position = matMVP * vec4(vPosition,1.0);"	//new!
 "}";
 
-///ƒtƒ‰ƒOƒƒ“ƒgƒVƒF[ƒ_
+///ãƒ•ãƒ©ã‚°ãƒ¡ãƒ³ãƒˆã‚·ã‚§ãƒ¼ãƒ€
 static const char* fsCode =
 "#version 410\n"
 "layout(location = 0) in vec4 inColor;"
@@ -82,7 +82,7 @@ static const char* fsCode =
 
 
 /**
-*“G‚Ì‰~”Õ‚Ìó‘Ô‚ğXV‚·‚é
+*æ•µã®å††ç›¤ã®çŠ¶æ…‹ã‚’æ›´æ–°ã™ã‚‹
 */
 struct UpdateToroid
 {
@@ -90,7 +90,7 @@ struct UpdateToroid
 	//explicit UpdateToroid(Entity::BufferPtr buffer) : entityBuffer(buffer){}
 	void operator() (Entity::Entity& entity,double delta)
 	{
-		//”ÍˆÍŠO‚Éo‚½‚çíœ‚·‚é
+		//ç¯„å›²å¤–ã«å‡ºãŸã‚‰å‰Šé™¤ã™ã‚‹
 		const glm::vec3 pos = entity.Position();
 		if (std::abs(pos.x) > 40.0f || std::abs(pos.z) > 40.0f)
 		{
@@ -98,7 +98,7 @@ struct UpdateToroid
 			return;
 		}
 
-		//‰~”Õ‚ğ‰ñ“]‚³‚¹‚é
+		//å††ç›¤ã‚’å›è»¢ã•ã›ã‚‹
 		float rot = glm::angle(entity.Rotation());
 		rot += glm::radians(15.0f) * static_cast<float>(delta);
 		if (rot > glm::pi<float>() * 2.0f)
@@ -113,7 +113,7 @@ struct UpdateToroid
 };
 
 /**
-*	©‹@‚Ì’e‚ÌXV
+*	è‡ªæ©Ÿã®å¼¾ã®æ›´æ–°
 */
 struct UpdatePlayerShot
 {
@@ -129,7 +129,7 @@ struct UpdatePlayerShot
 };
 
 /**
-*	”š”­‚ÌXV
+*	çˆ†ç™ºã®æ›´æ–°
 */
 struct UpdateBlast
 {
@@ -141,12 +141,12 @@ struct UpdateBlast
 			entity.Destroy();
 			return;
 		}
-		//•Ï‰»—Ê
+		//å¤‰åŒ–é‡
 		const float variation = static_cast<float>(timer * 4);
-		//™X‚ÉŠg‘å‚·‚é
+		//å¾ã€…ã«æ‹¡å¤§ã™ã‚‹
 		entity.Scale(glm::vec3(static_cast<float>(1 + variation)));
 
-		//ŠÔŒo‰ß‚ÅF‚Æ“§–¾“x‚ğ•Ï‰»‚³‚¹‚é
+		//æ™‚é–“çµŒéã§è‰²ã¨é€æ˜åº¦ã‚’å¤‰åŒ–ã•ã›ã‚‹
 		static const glm::vec4 color[] =
 		{
 			glm::vec4(1.0f,1.0f,0.75f,1),
@@ -159,7 +159,7 @@ struct UpdateBlast
 		const glm::vec4 newColor = glm::mix(col0,col1,std::fmod(variation,1));
 		entity.Color(newColor);
 		
-		//Y²‰ñ“]‚³‚¹‚é
+		//Yè»¸å›è»¢ã•ã›ã‚‹
 		glm::vec3 euler = glm::eulerAngles(entity.Rotation());
 		euler.y += glm::radians(60.0f) * static_cast<float>(delta);
 		entity.Rotation(glm::quat(euler));
@@ -170,7 +170,7 @@ struct UpdateBlast
 
 
 /**
-*	Šú‚ÌXV
+*	æ™‚æœŸã®æ›´æ–°
 */
 struct UpdatePlayer
 {
@@ -200,7 +200,7 @@ struct UpdatePlayer
 		}
 		if (vec.x || vec.z)
 		{
-			//‘¬‚³
+			//é€Ÿã•
 			vec = glm::normalize(vec) * 10.0f;
 		}
 		entity.Velocity(vec);
@@ -245,12 +245,12 @@ private :
 
 
 /**
-*ƒQ[ƒ€‚Ìó‘Ô‚ğXV‚·‚é
+*ã‚²ãƒ¼ãƒ ã®çŠ¶æ…‹ã‚’æ›´æ–°ã™ã‚‹
 *
-*@param	entityBuffer	“GƒGƒ“ƒeƒBƒeƒB’Ç‰Áæ‚ÌƒGƒ“ƒeƒBƒeƒBƒoƒbƒtƒ@
-*@param	meshBuffer		“GƒGƒ“ƒeƒBƒeƒB‚ÌƒƒbƒVƒ…‚ğŠÇ—‚µ‚Ä‚¢‚éƒƒbƒVƒ…ƒoƒbƒtƒ@
-*@param	tex				“GƒGƒ“ƒeƒBƒeƒB—p‚ÌƒeƒNƒXƒ`ƒƒ
-*@param	prog			“GƒGƒ“ƒeƒBƒeƒB—p‚ÌƒVƒF[ƒ_[ƒvƒƒOƒ‰ƒ€
+*@param	entityBuffer	æ•µã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£è¿½åŠ å…ˆã®ã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£ãƒãƒƒãƒ•ã‚¡
+*@param	meshBuffer		æ•µã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£ã®ãƒ¡ãƒƒã‚·ãƒ¥ã‚’ç®¡ç†ã—ã¦ã„ã‚‹ãƒ¡ãƒƒã‚·ãƒ¥ãƒãƒƒãƒ•ã‚¡
+*@param	tex				æ•µã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£ç”¨ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£
+*@param	prog			æ•µã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£ç”¨ã®ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
 */
 struct Update
 {
@@ -300,7 +300,7 @@ struct Update
 
 
 /**
-*	©‹@‚Ì’e‚Æ“G‚ÌÕ“Ëˆ—
+*	è‡ªæ©Ÿã®å¼¾ã¨æ•µã®è¡çªå‡¦ç†
 */
 void PlayerShotAndEntityCollisionHandler(Entity::Entity& lhs, Entity::Entity& rhs)
 {
@@ -319,12 +319,12 @@ void PlayerShotAndEntityCollisionHandler(Entity::Entity& lhs, Entity::Entity& rh
 
 
 /**
-*Uniform Block Object‚ğì¬‚·‚é
+*Uniform Block Objectã‚’ä½œæˆã™ã‚‹
 *
-*@param	size Uniform Block‚ÌƒTƒCƒY
-*@param data Uniform Block‚É“]‘—‚·‚éƒf[ƒ^‚Ö‚Ìƒ|ƒCƒ“ƒ^
+*@param	size Uniform Blockã®ã‚µã‚¤ã‚º
+*@param data Uniform Blockã«è»¢é€ã™ã‚‹ãƒ‡ãƒ¼ã‚¿ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 *
-*@return ì¬‚µ‚½UBO
+*@return ä½œæˆã—ãŸUBO
 */
 GLuint CreateUBO(GLsizeiptr size, const GLvoid* data = nullptr)
 {
@@ -337,7 +337,7 @@ GLuint CreateUBO(GLsizeiptr size, const GLvoid* data = nullptr)
 }
 
 
-///ƒGƒ“ƒgƒŠ[ƒ|ƒCƒ“ƒg
+///ã‚¨ãƒ³ãƒˆãƒªãƒ¼ãƒã‚¤ãƒ³ãƒˆ
 int main()
 {
 	GameEngine& game = GameEngine::Instance();
