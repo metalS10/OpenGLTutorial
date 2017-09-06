@@ -243,6 +243,7 @@ private :
 	double shotInterval = 0;
 };
 
+
 /**
 *ƒQ[ƒ€‚Ìó‘Ô‚ğXV‚·‚é
 *
